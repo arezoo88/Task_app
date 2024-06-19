@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from .constants import TASK_STATUS_CHOICES
 
 
 class BaseModel(models.Model):
@@ -34,11 +35,6 @@ class Project(BaseModel):
 
 
 class Task(BaseModel):
-    STATUS_CHOICES = {
-        "pending": "Pending",
-        "in_progress": "In Progress",
-        "completed": "Completed"
-    }
     project = models.ForeignKey(
         verbose_name=_('Project'),
         to=Project,
@@ -56,7 +52,7 @@ class Task(BaseModel):
     )
     status = models.CharField(
         verbose_name=_('Status'),
-        choices=STATUS_CHOICES,
+        choices=TASK_STATUS_CHOICES,
         max_length=15,
         default='pending'
     )
