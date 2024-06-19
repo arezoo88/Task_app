@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apps.project.models import Project, Task
+from apps.project.models import Project, Task, Comment
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -9,7 +9,6 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 
 class TaskSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Task
         fields = "__all__"
@@ -19,3 +18,9 @@ class TaskSerializer(serializers.ModelSerializer):
         data['project'] = ProjectSerializer(
             Project.objects.get(pk=instance.project.pk)).data
         return data
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = "__all__"
