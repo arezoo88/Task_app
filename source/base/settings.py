@@ -72,6 +72,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'base.wsgi.application'
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379",
+    }
+}
+CACHE_TTL = 60 * 15  # 15 minutes
 
 
 # Database
