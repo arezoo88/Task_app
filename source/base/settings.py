@@ -11,21 +11,26 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config,Csv
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+PROJECT_NAME = config("PROJECT_NAME")
+PROJECT_DESCRIPTION = config("PROJECT_DESCRIPTION")
+PROJECT_DOMAIN_NAME = config("PROJECT_DOMAIN_NAME")
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-r@zlxgvkdrdyga5&8(5v)bofo5raze!c^1+c7%ajq4e#k87^23'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='', cast=Csv())
 
 
 # Application definition
@@ -75,10 +80,10 @@ WSGI_APPLICATION = 'base.wsgi.application'
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379",
+        "LOCATION": config("REDIS_URL", "redis://127.0.0.1:6379")
     }
 }
-CACHE_TTL = 60 * 15  # 15 minutes
+CACHE_TTL = config("CACHE_TTL", 900)
 
 
 # Database
@@ -91,6 +96,14 @@ DATABASES = {
     }
 }
 
+DATABASE_URL = config('DATABASE_URL')
+
+db_configs = dj_database_url.config(
+    default=DATABASE_URL,
+    conn_max_age=500,
+    ssl_require=False
+)
+# DATABASES['default'].update(db_configs)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
