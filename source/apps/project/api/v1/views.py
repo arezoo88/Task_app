@@ -29,6 +29,16 @@ class TaskViewSet(viewsets.ModelViewSet):
     serializer_class = TaskSerializer
     queryset = Task.objects.all()
 
+    def list(self, request, *args, **kwargs):
+        cache_key = 'tasks_list'
+        cached_tasks = cache.get(cache_key)
+
+        if cached_tasks:
+            return Response(cached_tasks)
+        serializer = self.get_serializer(self.queryset, many=True)
+        cache.set(cache_key, serializer.data, CACHE_TTL)
+        return Response(serializer.data)
+
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
