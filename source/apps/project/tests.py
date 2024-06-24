@@ -65,3 +65,32 @@ class TaskViewSetTests(APITestCase):
     def test_delete_task(self):
         response = self.client.delete(self.task_detail_url(self.task.pk))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+
+class CommentViewSetTests(APITestCase):
+
+    def setUp(self):
+        self.project = Project.objects.create(name="Test Project")
+        self.task = Task.objects.create(
+            title="Test Task", project=self.project, due_date=timezone.now())
+        self.comment_list_create_url = f'/api/v1/tasks/{self.task.pk}/comments/'
+        self.comment = Comment.objects.create(
+            content="Test Comment", task=self.task, author='Arezoo Darvishi')
+
+    def test_list_comments(self):
+        response = self.client.get(self.comment_list_create_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['content'], "Test Comment")
+
+    def test_create_comment(self):
+        data = {'content': 'New Comment',
+                'task': self.task, 'author': 'Arezoo Darvishi'}
+        response = self.client.post(self.comment_list_create_url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Comment.objects.count(), 2)
+
+    def test_create_comment_with_missing_content(self):
+        data = {'task': self.task, 'author': 'Arezoo Darvishi'}
+        response = self.client.post(self.comment_list_create_url, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
