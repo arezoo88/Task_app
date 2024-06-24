@@ -2,6 +2,7 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
 from .models import Project, Task, Comment
+from django.utils import timezone
 
 
 class ProjectTests(APITestCase):
@@ -30,4 +31,37 @@ class ProjectTests(APITestCase):
 
     def test_delete_project(self):
         response = self.client.delete(self.project_detail_url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+
+class TaskViewSetTests(APITestCase):
+
+    def setUp(self):
+        self.project = Project.objects.create(name="Test Project")
+        self.task_list_url = '/api/v1/tasks/'
+        self.task_detail_url = lambda pk: f'/api/v1/tasks/{pk}/'
+        self.task = Task.objects.create(
+            title="Test Task", project=self.project, due_date=timezone.now())
+
+    def test_list_tasks(self):
+        response = self.client.get(self.task_list_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_retrieve_task(self):
+        response = self.client.get(self.task_detail_url(self.task.pk))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_create_task(self):
+        data = {'title': 'New Task', 'project': self.project.pk,
+                'due_date': timezone.now()}
+        response = self.client.post(self.task_list_url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_pathch_task(self):
+        data = {'name': 'Updated Task', 'project': self.project.pk, }
+        response = self.client.patch(self.task_detail_url(self.task.pk), data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_delete_task(self):
+        response = self.client.delete(self.task_detail_url(self.task.pk))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
