@@ -28,6 +28,9 @@ class Project(BaseModel):
         null=True
     )
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         ordering = ['-created_at']
         verbose_name = _('Project')
@@ -60,6 +63,9 @@ class Task(BaseModel):
         verbose_name=_('Due_Date'),
     )
 
+    def __str__(self):
+        return self.title
+
     class Meta:
         ordering = ['-created_at']
         verbose_name = _('Task')
@@ -84,6 +90,9 @@ class Comment(models.Model):
         verbose_name=_('Created_at'),
         auto_now_add=True
     )
+
+    def __str__(self):
+        return self.author
 
     class Meta:
         ordering = ['-created_at']
