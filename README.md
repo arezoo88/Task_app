@@ -52,7 +52,7 @@ A Django-based task management application with cache system using redis and rea
 4. **Create superuser:**
 
     ```sh
-    docker-compose exec web python manage.py createsuperuser
+    docker-compose exec web bash -c "cd /home/app/source && python manage.py createsuperuser"
     ```
 
 ## Running the Project
@@ -74,7 +74,7 @@ A Django-based task management application with cache system using redis and rea
 1. **Run tests:**
 
     ```sh
-    docker-compose exec web python manage.py test
+    docker-compose run test
     ```
 
 ## API Documentation
