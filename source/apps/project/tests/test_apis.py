@@ -1,7 +1,7 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
-from .models import Project, Task, Comment
+from apps.project.models import Project, Task, Comment
 from django.utils import timezone
 
 
@@ -26,7 +26,7 @@ class ProjectTests(APITestCase):
 
     def test_update_project(self):
         data = {'name': 'Updated Project'}
-        response = self.client.put(self.project_detail_url, data)
+        response = self.client.patch(self.project_detail_url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_delete_project(self):
