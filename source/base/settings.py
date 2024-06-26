@@ -11,9 +11,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-from decouple import config,Csv
+from decouple import config, Csv
 import dj_database_url
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 PROJECT_NAME = config("PROJECT_NAME")
@@ -32,10 +32,20 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='', cast=Csv())
 
+# Site settings
+SITE = {
+    "NAME": config("SITE_NAME", ""),
+    "DESCRIPTION": config("PROJECT_DESCRIPTION", ""),
+    "DOMAIN": config("SITE_DOMAIN", "http://localhost:8000"),
+}
 
+REST_FRAMEWORK = {
+    "DEFAULT_VERSION": "v1.0",
+}
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,6 +54,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Third Parties
     'rest_framework',
+    'channels',
+    "drf_yasg",
     # Locals
     'apps.project'
 ]
@@ -63,7 +75,7 @@ ROOT_URLCONF = 'base.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -75,8 +87,19 @@ TEMPLATES = [
         },
     },
 ]
+# Email Configs
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+FROM_EMAIL = config("FROM_EMAIL")
+DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
+EMAIL_HOST = config("EMAIL_HOST")
+EMAIL_PORT = config("EMAIL_PORT")
+EMAIL_HOST_USER = config("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS = True
 
 WSGI_APPLICATION = 'base.wsgi.application'
+ASGI_APPLICATION = 'base.asgi.application'
+
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
@@ -85,7 +108,22 @@ CACHES = {
 }
 CACHE_TTL = config("CACHE_TTL", 900)
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [config("REDIS_URL", '')],
+        },
+    },
+}
+# Celery Configuration Options
+CELERY_BROKER_URL = f"amqp://{config('RABBITMQ_USER')}:{config('RABBITMQ_PASS')}@{config('RABBITMQ_HOST')}:{config('RABBITMQ_PORT')}/"
 
+CELERY_RESULT_BACKEND = config("REDIS_URL")
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
@@ -103,7 +141,7 @@ db_configs = dj_database_url.config(
     conn_max_age=500,
     ssl_require=False
 )
-# DATABASES['default'].update(db_configs)
+DATABASES['default'].update(db_configs)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
