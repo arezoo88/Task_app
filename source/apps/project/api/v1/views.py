@@ -16,12 +16,10 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         cache_key = 'projects_list'
         cached_projects = cache.get(cache_key)
-
-        if cached_projects:
+        if cached_projects is not None:
             return Response(cached_projects)
         serializer = self.get_serializer(self.queryset, many=True)
         cache.set(cache_key, serializer.data, CACHE_TTL)
-
         return Response(serializer.data)
 
 
@@ -33,7 +31,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         cache_key = 'tasks_list'
         cached_tasks = cache.get(cache_key)
 
-        if cached_tasks:
+        if cached_tasks is not None:
             return Response(cached_tasks)
         serializer = self.get_serializer(self.queryset, many=True)
         cache.set(cache_key, serializer.data, CACHE_TTL)
