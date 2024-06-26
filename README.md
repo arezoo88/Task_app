@@ -83,4 +83,4 @@ Access the Swagger UI at `http://127.0.0.1:8000/swagger/` for interactive API do
 
 ## TEST SCREEN
 
-![My Image](assets/tests_screen.png)
+![Test Screen](https://github.com/arezoo88/Task_app/master/blob/master/assets/tests_screen.jpg?raw=true)
