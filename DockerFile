@@ -8,6 +8,6 @@ RUN apt install -y  build-essential software-properties-common libpq-dev make po
 COPY requirements/ /home/app/requirements/
 
 RUN pip3 install --no-cache-dir -r /home/app/requirements/development.txt
-COPY . /home/app/
+COPY . .
 
 EXPOSE 8000
