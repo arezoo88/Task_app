@@ -30,53 +30,57 @@ A Django-based task management application with cache system using redis and rea
 
 1. **Clone the repository:**
 
-    ```sh
-    git clone git@github.com:arezoo88/Task_app.git
-    cd source
-    ```
+   ```sh
+   git clone git@github.com:arezoo88/Task_app.git
+   cd source
+   ```
 
 2. **Create a `.env` file:**
 
-    ```sh
-    touch .env in source folder
-    ```
+   ```sh
+   touch .env in source folder
+   ```
 
-    Add the content of .env-sample into your `.env` file in source folder:
+   Add the content of .env-sample into your `.env` file in source folder:
 
 3. **Build and start the Docker containers:**
 
-    ```sh
-    docker-compose up --build
-    ```
+   ```sh
+   docker-compose up --build
+   ```
 
 4. **Create superuser:**
 
-    ```sh
-    docker-compose exec web bash -c "cd /home/app/source && python manage.py createsuperuser"
-    ```
+   ```sh
+   docker-compose exec web bash -c "cd /home/app/source && python manage.py createsuperuser"
+   ```
 
 ## Running the Project
 
 1. **Start the Docker containers:**
 
-    ```sh
-    docker-compose up
-    ```
+   ```sh
+   docker-compose up
+   ```
 
 2. **Access the application:**
 
-    - API: `http://127.0.0.1:8000/api/v1/`
-    - Swagger UI: `http://127.0.0.1:8000/swagger/`
-    - Admin: `http://127.0.0.1:8000/admin/`
+   - API: `http://127.0.0.1:8000/api/v1/`
+   - Swagger UI: `http://127.0.0.1:8000/swagger/`
+   - Admin: `http://127.0.0.1:8000/admin/`
 
 ## Running Tests
 
 1. **Run tests:**
 
-    ```sh
-    docker-compose run test
-    ```
+   ```sh
+   docker-compose run test
+   ```
 
 ## API Documentation
 
 Access the Swagger UI at `http://127.0.0.1:8000/swagger/` for interactive API documentation.
+
+## TEST SCREEN
+
+![My Image](assets/tests_screen.png)
