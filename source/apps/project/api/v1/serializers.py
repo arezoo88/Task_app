@@ -15,8 +15,8 @@ class TaskSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['project'] = ProjectSerializer(
-            Project.objects.get(pk=instance.project.pk)).data
+        # data['project'] = ProjectSerializer(
+        #     Project.objects.get(pk=instance.project.pk)).data
         return data
 
 
