@@ -7,3 +7,6 @@ dj-database-url==2.2.0
 celery==5.4.0
 django-celery-results==2.5.1
 django-celery-beat==2.6.0
+channels==4.1.0
+daphne
+channels_redis
